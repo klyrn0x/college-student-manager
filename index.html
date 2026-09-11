@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>College Student Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-theme="light">
+    <div id="landingScreen" class="landing-screen">
+      <div class="landing-card">
+        <div class="landing-topbar">
+          <div class="lang-switch" aria-label="Language switcher">
+            <button class="lang-btn active" data-lang="ru">Рус</button>
+            <button class="lang-btn" data-lang="kz">Каз</button>
+            <button class="lang-btn" data-lang="en">Eng</button>
+          </div>
+
+          <div class="theme-switch" aria-label="Theme switcher">
+            <button class="theme-btn active" data-theme="light">Свет</button>
+            <button class="theme-btn" data-theme="dark">Тёмн</button>
+            <button class="theme-btn" data-theme="contrast">Конт</button>
+          </div>
+        </div>
+
+        <div class="landing-content">
+          <div class="landing-copy">
+            <p class="college-code" data-i18n="collegeName">VATK</p>
+            <p class="eyebrow accent" data-i18n="collegeFullName">Высший аграрно-технологический колледж</p>
+            <h1 data-i18n="title">Student Manager</h1>
+            <p class="landing-subtitle" data-i18n="subtitle">Управление студентами колледжа в одном месте.</p>
+          </div>
+
+          <form id="landingRegisterForm" class="landing-form">
+            <h2 data-i18n="registerTitle">Регистрация</h2>
+            <input id="landingName" type="text" data-i18n-placeholder="namePlaceholder" placeholder="Имя и фамилия" required />
+            <input id="landingEmail" type="email" data-i18n-placeholder="emailPlaceholder" placeholder="Email" required />
+            <input id="landingPassword" type="password" data-i18n-placeholder="passwordPlaceholder" placeholder="Пароль" required />
+            <select id="landingRole">
+              <option value="User" data-i18n="roleUser">Пользователь</option>
+              <option value="Manager" data-i18n="roleManager">Менеджер</option>
+            </select>
+            <button type="submit" class="primary-btn full-width" data-i18n="createAccount">Создать аккаунт</button>
+            <p class="form-message danger" id="landingError"></p>
+            <div class="landing-footer">
+              <span data-i18n="alreadyAccount">Уже есть аккаунт?</span>
+              <button type="button" id="openLoginFromLanding" class="link-button" data-i18n="loginText">Войти</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="appShell" class="app-shell hidden">
+      <header class="topbar">
+        <div class="brand-block">
+          <div class="brand-mark">VATK</div>
+          <div>
+            <p class="eyebrow" data-i18n="collegeName">VATK</p>
+            <p class="brand-college-name" data-i18n="collegeFullName">Высший аграрно-технологический колледж</p>
+            <h1>Student Manager</h1>
+          </div>
+        </div>
+
+        <nav class="main-nav">
+          <button class="nav-btn active" data-view="dashboard" data-i18n="navDashboard">Главная</button>
+          <button class="nav-btn" data-view="students" data-i18n="navStudents">Студенты</button>
+          <button class="nav-btn" data-view="groups" data-i18n="navGroups">Группы</button>
+          <button class="nav-btn" data-view="profile" data-i18n="navProfile">Профиль</button>
+          <button class="nav-btn admin-only" data-view="admin" data-i18n="navAdmin">Админ</button>
+        </nav>
+
+        <div class="app-preferences">
+          <div class="lang-switch" aria-label="Language switcher">
+            <button class="lang-btn active" data-lang="ru">Рус</button>
+            <button class="lang-btn" data-lang="kz">Каз</button>
+            <button class="lang-btn" data-lang="en">Eng</button>
+          </div>
+          <div class="theme-switch" aria-label="Theme switcher">
+            <button class="theme-btn active" data-theme="light">Свет</button>
+            <button class="theme-btn" data-theme="dark">Тёмн</button>
+            <button class="theme-btn" data-theme="contrast">Конт</button>
+          </div>
+        </div>
+
+        <div class="user-menu">
+          <button id="openLoginBtn" class="secondary-btn" data-i18n="loginText">Войти</button>
+          <button id="openRegisterBtn" class="primary-btn" data-i18n="registerTitle">Регистрация</button>
+          <div id="userBadge" class="user-badge hidden">
+            <span id="userRole">User</span>
+            <strong id="userName">Guest</strong>
+          </div>
+          <button id="logoutBtn" class="ghost-btn hidden" data-i18n="logoutText">Выход</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <section id="dashboardView" class="view active">
+          <div class="welcome-card panel">
+            <div>
+              <p class="eyebrow accent" data-i18n="dashboardBadge">Реформа академического учета</p>
+              <h2 data-i18n="dashboardTitle">Эффективное управление студентами колледжа</h2>
+            </div>
+            <button id="addStudentFromDashboard" class="primary-btn" data-i18n="addStudent">Добавить студента</button>
+          </div>
+
+          <div class="stats-grid" id="statsGrid"></div>
+
+          <div class="dashboard-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <h3 data-i18n="statusStats">Статистика по статусам</h3>
+              </div>
+              <div id="statusChart" class="status-chart"></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h3 data-i18n="gpaGroups">Средний балл по группам</h3>
+              </div>
+              <div id="groupScoreChart" class="mini-chart"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="studentsView" class="view">
+          <div class="panel toolbar-panel">
+            <div class="toolbar-top">
+              <div class="search-box">
+                <input id="searchInput" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Поиск по имени, email, группе..." />
+              </div>
+              <div class="filter-row">
+                <select id="groupFilter">
+                  <option value="all" data-i18n="allGroups">Все группы</option>
+                </select>
+                <select id="specialtyFilter">
+                  <option value="all" data-i18n="allSpecialties">Все специальности</option>
+                </select>
+                <select id="statusFilter">
+                  <option value="all" data-i18n="allStatuses">Все статусы</option>
+                  <option value="Активный" data-i18n="statusActive">Активный</option>
+                  <option value="На каникулах" data-i18n="statusVacation">На каникулах</option>
+                  <option value="Отчислен" data-i18n="statusDropped">Отчислен</option>
+                  <option value="Выпускник" data-i18n="statusGraduate">Выпускник</option>
+                </select>
+                <select id="sortSelect">
+                  <option value="name-asc" data-i18n="sortNameAsc">Имя ↑</option>
+                  <option value="name-desc" data-i18n="sortNameDesc">Имя ↓</option>
+                  <option value="gpa-desc" data-i18n="sortGpaDesc">Средний балл ↓</option>
+                  <option value="gpa-asc" data-i18n="sortGpaAsc">Средний балл ↑</option>
+                  <option value="year-desc" data-i18n="sortCourseDesc">Курс ↓</option>
+                </select>
+                <button id="addStudentBtn" class="primary-btn" data-i18n="addStudent">Добавить студента</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="studentsList" class="students-grid"></div>
+        </section>
+
+        <section id="groupsView" class="view">
+          <div class="panel">
+            <div class="panel-header split">
+              <h3 data-i18n="groupsTitle">Группы и специальности</h3>
+              <span class="badge" id="groupCountBadge">0</span>
+            </div>
+            <div class="list-stack" id="groupList"></div>
+          </div>
+        </section>
+
+        <section id="profileView" class="view">
+          <div class="panel profile-panel">
+            <div class="profile-head">
+              <div class="avatar-wrap">
+                <div class="avatar" id="profileAvatar">A</div>
+                <label class="avatar-upload" for="avatarInput" data-i18n="changeAvatar">Изменить</label>
+                <input id="avatarInput" type="file" accept="image/png,image/jpeg,image/webp" />
+              </div>
+              <div>
+                <p class="eyebrow accent" data-i18n="profileCabinet">Личный кабинет</p>
+                <h3 id="profileName">Пользователь</h3>
+              </div>
+            </div>
+            <div class="profile-card-grid">
+              <div class="info-item">
+                <span data-i18n="profileRoleLabel">Роль</span>
+                <strong id="profileRole">User</strong>
+              </div>
+              <div class="info-item">
+                <span>Email</span>
+                <strong id="profileEmail">-</strong>
+              </div>
+              <div class="info-item">
+                <span data-i18n="profileStudentsLabel">Студентов в системе</span>
+                <strong id="profileStudentCount">0</strong>
+              </div>
+              <div class="info-item">
+                <span data-i18n="profileLastLoginLabel">Последний вход</span>
+                <strong id="profileLastLogin">-</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="adminView" class="view admin-only-section">
+          <div class="panel">
+            <div class="panel-header split">
+              <h3 data-i18n="adminPanelTitle">Панель администратора</h3>
+              <span class="badge admin-badge">Admin</span>
+            </div>
+
+            <div class="admin-grid">
+              <div>
+                <h4 data-i18n="groupManageTitle">Управление группами</h4>
+                <form id="groupForm" class="stack-form">
+                  <input id="groupNameInput" type="text" data-i18n-placeholder="groupPlaceholder" placeholder="Новая группа: CS-204" required />
+                  <button type="submit" class="primary-btn" data-i18n="addGroup">Добавить группу</button>
+                </form>
+              </div>
+
+              <div>
+                <h4 data-i18n="specialtyManageTitle">Управление специальностями</h4>
+                <form id="specialtyForm" class="stack-form">
+                  <input id="specialtyNameInput" type="text" data-i18n-placeholder="specialtyPlaceholder" placeholder="Новая специальность: Дизайн" required />
+                  <button type="submit" class="primary-btn" data-i18n="addSpecialty">Добавить специальность</button>
+                </form>
+              </div>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th data-i18n="tableName">Имя</th>
+                    <th data-i18n="tableRole">Роль</th>
+                    <th>Email</th>
+                    <th data-i18n="tableStatus">Состояние</th>
+                    <th data-i18n="tableActions">Действия</th>
+                  </tr>
+                </thead>
+                <tbody id="adminUsersTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="authModal" class="modal hidden">
+      <div class="modal-card">
+        <button class="close-modal" aria-label="Close">×</button>
+        <div class="auth-switch">
+          <button class="switch-btn active" data-auth="login" data-i18n="loginText">Вход</button>
+          <button class="switch-btn" data-auth="register" data-i18n="registerTitle">Регистрация</button>
+        </div>
+
+        <form id="loginForm" class="auth-form active-auth-form">
+          <h3 data-i18n="loginSystem">Вход в систему</h3>
+          <input id="loginEmail" type="email" placeholder="Email" required />
+          <input id="loginPassword" type="password" data-i18n-placeholder="passwordPlaceholder" placeholder="Пароль" required />
+          <div class="demo-credentials">
+            <span>Demo: admin@college.ru / admin123</span>
+          </div>
+          <button type="submit" class="primary-btn full-width" data-i18n="loginText">Войти</button>
+          <p class="form-message danger" id="loginError"></p>
+        </form>
+
+        <form id="registerForm" class="auth-form">
+          <h3 data-i18n="registerTitle">Создать аккаунт</h3>
+          <input id="registerName" type="text" data-i18n-placeholder="namePlaceholder" placeholder="Имя и фамилия" required />
+          <input id="registerEmail" type="email" placeholder="Email" required />
+          <input id="registerPassword" type="password" data-i18n-placeholder="passwordPlaceholder" placeholder="Пароль" required />
+          <select id="registerRole">
+            <option value="User" data-i18n="roleUser">User</option>
+            <option value="Manager" data-i18n="roleManager">Manager</option>
+          </select>
+          <button type="submit" class="primary-btn full-width" data-i18n="createAccount">Зарегистрироваться</button>
+          <p class="form-message danger" id="registerError"></p>
+        </form>
+      </div>
+    </div>
+
+    <div id="studentModal" class="modal hidden">
+      <div class="modal-card large-modal">
+        <button class="close-modal" aria-label="Close">×</button>
+        <h3 id="studentModalTitle" data-i18n="studentModalAdd">Добавить студента</h3>
+        <form id="studentForm" class="student-form">
+          <div class="two-col">
+            <input id="studentFirstName" name="firstName" type="text" data-i18n-placeholder="firstNamePlaceholder" placeholder="Имя" required />
+            <input id="studentLastName" name="lastName" type="text" data-i18n-placeholder="lastNamePlaceholder" placeholder="Фамилия" required />
+          </div>
+          <div class="two-col">
+            <input id="studentEmail" name="email" type="email" placeholder="Email" required />
+            <input id="studentPhone" name="phone" type="tel" data-i18n-placeholder="phonePlaceholder" placeholder="Телефон" required />
+          </div>
+          <div class="two-col">
+            <select id="studentGroup" name="group" required></select>
+            <select id="studentSpecialty" name="specialty" required></select>
+          </div>
+          <div class="two-col">
+            <input id="studentCourse" name="course" type="number" min="1" max="6" data-i18n-placeholder="coursePlaceholder" placeholder="Курс" required />
+            <select id="studentStatus" name="status" required>
+              <option value="Активный" data-i18n="statusActive">Активный</option>
+              <option value="На каникулах" data-i18n="statusVacation">На каникулах</option>
+              <option value="Отчислен" data-i18n="statusDropped">Отчислен</option>
+              <option value="Выпускник" data-i18n="statusGraduate">Выпускник</option>
+            </select>
+          </div>
+          <div class="two-col">
+            <input id="studentGpa" name="gpa" type="number" min="0" max="5" step="0.1" data-i18n-placeholder="gpaPlaceholder" placeholder="Средний балл" required />
+            <input id="studentAddress" name="address" type="text" data-i18n-placeholder="addressPlaceholder" placeholder="Адрес" required />
+          </div>
+          <textarea id="studentNotes" name="notes" rows="3" data-i18n-placeholder="notesPlaceholder" placeholder="Дополнительные заметки"></textarea>
+          <p class="form-message danger" id="studentFormError"></p>
+          <button type="submit" class="primary-btn full-width" data-i18n="saveText">Сохранить</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
