@@ -523,6 +523,53 @@ const state = {
 
 let databaseData = null;
 
+function initBannerSlider() {
+  const slider = document.getElementById('bannerSlider');
+  if (!slider) return;
+
+  const slides = [...slider.querySelectorAll('.banner-slide')];
+  const dots = [...slider.querySelectorAll('.banner-dot')];
+  let activeIndex = 0;
+  let autoplayId;
+
+  const showSlide = (index) => {
+    activeIndex = (index + slides.length) % slides.length;
+    slides.forEach((slide, slideIndex) => slide.classList.toggle('active', slideIndex === activeIndex));
+    dots.forEach((dot, dotIndex) => {
+      const isActive = dotIndex === activeIndex;
+      dot.classList.toggle('active', isActive);
+      dot.setAttribute('aria-selected', String(isActive));
+    });
+  };
+
+  const stopAutoplay = () => window.clearInterval(autoplayId);
+  const startAutoplay = () => {
+    stopAutoplay();
+    autoplayId = window.setInterval(() => showSlide(activeIndex + 1), 4500);
+  };
+
+  slider.querySelector('.banner-arrow-prev')?.addEventListener('click', () => {
+    showSlide(activeIndex - 1);
+    startAutoplay();
+  });
+  slider.querySelector('.banner-arrow-next')?.addEventListener('click', () => {
+    showSlide(activeIndex + 1);
+    startAutoplay();
+  });
+  dots.forEach((dot, dotIndex) => dot.addEventListener('click', () => {
+    showSlide(dotIndex);
+    startAutoplay();
+  }));
+
+  slider.addEventListener('mouseenter', stopAutoplay);
+  slider.addEventListener('mouseleave', startAutoplay);
+  slider.addEventListener('focusin', stopAutoplay);
+  slider.addEventListener('focusout', (event) => {
+    if (!slider.contains(event.relatedTarget)) startAutoplay();
+  });
+  startAutoplay();
+}
+
 function readStorage(key, fallback) {
   const saved = localStorage.getItem(key);
   if (!saved) return fallback;
@@ -1429,6 +1476,7 @@ function bindEvents() {
 async function init() {
   await seedData();
   bindEvents();
+  initBannerSlider();
   setAuthMode('login');
   setLanguage(state.lang);
   setTheme(state.theme);

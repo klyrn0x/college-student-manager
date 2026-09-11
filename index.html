@@ -99,12 +99,26 @@
 
       <main class="content">
         <section id="dashboardView" class="view active">
-          <div class="welcome-card panel">
-            <div>
-              <p class="eyebrow accent" data-i18n="dashboardBadge">Реформа академического учета</p>
-              <h2 data-i18n="dashboardTitle">Эффективное управление студентами колледжа</h2>
+          <div class="banner-slider" id="bannerSlider" aria-label="VATK Student Manager banners">
+            <div class="banner-track">
+              <div class="banner-slide active">
+                <img src="assets/banners/photo_2026-09-11_11-54-04 (3).jpg" alt="VATK Student Manager на фоне здания колледжа" />
+              </div>
+              <div class="banner-slide">
+                <img src="assets/banners/photo_2026-09-11_11-54-04 (2).jpg" alt="VATK Student Manager с планшетом" />
+              </div>
+              <div class="banner-slide">
+                <img src="assets/banners/photo_2026-09-11_11-54-04.jpg" alt="VATK Student Manager с ноутбуком" />
+              </div>
             </div>
-            <button id="addStudentFromDashboard" class="primary-btn" data-i18n="addStudent">Добавить студента</button>
+
+            <button class="banner-arrow banner-arrow-prev" type="button" aria-label="Предыдущий баннер">&#10094;</button>
+            <button class="banner-arrow banner-arrow-next" type="button" aria-label="Следующий баннер">&#10095;</button>
+            <div class="banner-dots" role="tablist" aria-label="Выбор баннера">
+              <button class="banner-dot active" type="button" role="tab" aria-label="Баннер 1" aria-selected="true"></button>
+              <button class="banner-dot" type="button" role="tab" aria-label="Баннер 2" aria-selected="false"></button>
+              <button class="banner-dot" type="button" role="tab" aria-label="Баннер 3" aria-selected="false"></button>
+            </div>
           </div>
 
           <div class="stats-grid" id="statsGrid"></div>
