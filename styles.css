@@ -296,6 +296,9 @@ body[data-theme="contrast"] .topbar {
 }
 
 .banner-slide {
+  display: grid;
+  place-items: center;
+  background: #071226;
   opacity: 0;
   transition: opacity 0.7s ease;
   pointer-events: none;
@@ -310,8 +313,7 @@ body[data-theme="contrast"] .topbar {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
+  object-fit: contain;
 }
 
 .banner-arrow {
@@ -1046,10 +1048,6 @@ body[data-theme="contrast"] .landing-card {
 
   .banner-slider {
     aspect-ratio: 16 / 9;
-  }
-
-  .banner-slide img {
-    object-fit: contain;
   }
 
   .banner-arrow {
