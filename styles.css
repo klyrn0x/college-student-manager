@@ -282,11 +282,10 @@ body[data-theme="contrast"] .topbar {
 .banner-slider {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 5 / 1.15;
-  min-height: 170px;
+  aspect-ratio: 5 / 1;
   border: 1px solid var(--line);
   border-radius: 22px;
-  background: var(--panel-alt);
+  background: #071226;
   box-shadow: var(--shadow);
 }
 
@@ -312,6 +311,7 @@ body[data-theme="contrast"] .topbar {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .banner-arrow {
@@ -1045,8 +1045,11 @@ body[data-theme="contrast"] .landing-card {
   }
 
   .banner-slider {
-    aspect-ratio: 1.55 / 1;
-    min-height: 190px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .banner-slide img {
+    object-fit: contain;
   }
 
   .banner-arrow {
